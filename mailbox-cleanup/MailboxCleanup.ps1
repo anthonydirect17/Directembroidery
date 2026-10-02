@@ -151,6 +151,7 @@ $Http = New-Object System.Net.Http.HttpClient
 $Http.Timeout = [TimeSpan]::FromMinutes(5)
 $script:AccessToken = $null
 $script:AccessTokenExpiry = [datetime]::MinValue
+$script:SignedInAccount = $null
 
 function Write-Log {
     param([string]$Message, [ValidateSet('INFO', 'WARN', 'ERROR')][string]$Level = 'INFO')
@@ -228,7 +229,28 @@ function Invoke-TokenRequest([hashtable]$Form) {
     return $json
 }
 
+function Get-IdTokenAccount($TokenResponse) {
+    # Reads the signed-in account from the id_token Microsoft returns with every token
+    # (openid/profile scopes). Used instead of Graph /me, which needs User.Read.
+    if (-not ($TokenResponse.PSObject.Properties['id_token'] -and $TokenResponse.id_token)) { return $null }
+    try {
+        $payload = ([string]$TokenResponse.id_token).Split('.')[1].Replace('-', '+').Replace('_', '/')
+        switch ($payload.Length % 4) { 2 { $payload += '==' } 3 { $payload += '=' } }
+        $claims = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($payload)) | ConvertFrom-Json
+        $upn = ''
+        foreach ($n in @('preferred_username', 'upn', 'email')) {
+            if ($claims.PSObject.Properties[$n] -and $claims.$n) { $upn = [string]$claims.$n; break }
+        }
+        $name = if ($claims.PSObject.Properties['name']) { [string]$claims.name } else { '' }
+        if (-not $upn) { return $null }
+        return [pscustomobject]@{ displayName = $name; userPrincipalName = $upn }
+    }
+    catch { return $null }
+}
+
 function Save-TokenResponse($TokenResponse) {
+    $account = Get-IdTokenAccount $TokenResponse
+    if ($account) { $script:SignedInAccount = $account }
     $script:AccessToken = $TokenResponse.access_token
     $script:AccessTokenExpiry = (Get-Date).AddSeconds([int]$TokenResponse.expires_in - 120)
     if ($TokenResponse.PSObject.Properties['refresh_token'] -and $TokenResponse.refresh_token) {
@@ -621,7 +643,10 @@ try {
         exit 0
     }
 
-    $me = Invoke-Graph -Uri '/me?$select=displayName,mail,userPrincipalName'
+    # Confirms mail access (Mail.ReadWrite is the only Graph permission requested; /me would need User.Read).
+    [void](Invoke-Graph -Uri '/me/mailFolders/inbox?$select=id')
+    $me = $script:SignedInAccount
+    if (-not $me) { $me = [pscustomobject]@{ displayName = ''; userPrincipalName = '(account name not returned by sign-in)' } }
     Write-Log "Signed in as $($me.displayName) <$($me.userPrincipalName)>"
 
     if ($InstallSchedule) {

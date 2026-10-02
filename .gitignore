@@ -1,0 +1,7 @@
+# Saved sign-in and run logs from MailboxCleanup.ps1. Never commit these.
+mailbox-cleanup/state/
+mailbox-cleanup/logs/
+
+# Output from Inspect-PrintExp.ps1
+PrintExp-Inspect-*/
+PrintExp-Inspect-*.zip

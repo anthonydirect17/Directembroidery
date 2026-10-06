@@ -5,3 +5,6 @@ mailbox-cleanup/logs/
 # Output from Inspect-PrintExp.ps1
 PrintExp-Inspect-*/
 PrintExp-Inspect-*.zip
+
+# Python bytecode cache
+__pycache__/

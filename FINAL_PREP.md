@@ -26,6 +26,10 @@ Checklist gets added here once setup is finished. Setup steps: `printer-autoclea
 
 ## After the trip (not before)
 
-- **Run both printers from one PC.** Blocker: both printer boards use the same address (192.168.127.10, port 5001). Needs a second network adapter, one board moved to a new address (find where PrintExp sets it; no vendor support, so test carefully), two PrintExp copies in separate folders (versions differ: 2022 and 2024), and AutoClean adapted for two windows.
+- **Run both printers from one PC.** Blocker: both printer boards use the same address (192.168.127.10, port 5001).
+  - Network adapters: already have them (each printer has its own 1 Gb USB network adapter).
+  - New address for one board: Claude researches where PrintExp sets it and walks Anthony through it, tested carefully (no vendor support).
+  - Two PrintExp copies in separate folders (versions differ: 2022 and 2024): explore and test.
+  - AutoClean for two windows: not needed until after this trip.
 - **Email cleanup on Microsoft's side** (option C), so it no longer depends on a PC.
 - **Windows 10 end of support:** decide on extended updates or an upgrade for the printer PCs.

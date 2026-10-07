@@ -27,7 +27,7 @@ Saved 2026-10-07. Pick up here when Anthony says "work on Machine 1".
 
 ## Other open items (not Machine 1)
 
-- Machine 2: send the 5 PM 10/7 status line. Expected `Machine - 2  Clean  PASS clean ran (Menu), cap 10 down / 10 up, ended capped, Device Ready`. This is the first live run of the cap check.
+- Machine 2: live end-to-end test PASSED 2026-10-07 10:49 (`Clean PASS clean ran (Menu), cap 10 down / 10 up, ended capped, Device Ready`). Ready; switch is OFF until departure.
 - Machine 2 before leaving: switch ON, PrintExp open on Device Ready, PC signed in and unlocked, waste bottle emptied.
 - Watchdog routine `trig_01GdobDWLv1cQTg5btVzTvtu` runs in the original cloud session, checking at 9:30 AM and 5:30 PM, active 10/11 5:30 PM to 10/18 9:30 AM. Don't archive that session. It deletes itself after the last check.
 - Sticker: waiting on the customer's pick from the blue test sheets (sheet name plus option number).

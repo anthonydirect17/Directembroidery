@@ -13,7 +13,21 @@ Saved 2026-10-07. Pick up here when Anthony says "work on Machine 1".
   - 11788, started 2026-10-07 10:24 AM, window "PrintExp", owns the printer connection (the real one)
   - The laptop has not restarted since at least 2026-08-31.
 
-## Next steps (in order)
+## Plan (decided 2026-10-08): short internet session
+
+Anthony connects the laptop to the shop Wi-Fi for one session and a local Claude does steps 2 to 8 below. Prompt: `MACHINE1_LOCAL_PROMPT.md` (also in the Drive folder "Printer AutoClean (DTF)").
+
+Anthony's part:
+
+1. End of the work day: close PrintExp normally, restart the laptop.
+2. Before going online: Windows Update > Pause updates (skip if the pause limit is reached).
+3. Connect to the shop Wi-Fi and set it to **Metered** right away. If Windows asks to restart while online, say no.
+4. From Machine 2, copy `AutoClean.ps1` and `DTF-AutoClean-Switch.ps1` (in `C:\DirectTools\printer-autoclean`) to a USB stick and plug it into the laptop.
+5. Open PrintExp, wait for Device Ready.
+6. Open Claude on the laptop and paste the prompt. Click Yes on the one admin prompt. Watch the printer during the test clean.
+7. Turn the Wi-Fi off and paste the session's report into the cloud chat.
+
+## Detailed steps (what the local session does)
 
 1. End of work day, after any print job finishes: close PrintExp normally, then **restart the laptop**. (Alternative: admin PowerShell `Stop-Process -Id 6252, 10016`.)
 2. Open PrintExp once, connect, wait for Device Ready. Confirm `(Get-Process PrintExp_X64).Count` returns **1**.

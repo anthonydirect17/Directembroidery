@@ -13,7 +13,13 @@ Saved 2026-10-07. Pick up here when Anthony says "work on Machine 1".
   - 11788, started 2026-10-07 10:24 AM, window "PrintExp", owns the printer connection (the real one)
   - The laptop has not restarted since at least 2026-08-31.
 
-## Status 2026-10-08 night: READY
+## Status 2026-10-08 late: v1.2 test pending
+
+- Two more supervised cleans (17:22, 17:24) also ALERT with gaps in PrintExp's own log (2D/8U, 4D/7U); hand cleans are always 10/10. Anthony: caps seated every time, all normal.
+- Likely cause: v1.1 opened PrintExp's log every 1 to 2 s during the clean and the 2022 PrintExp drops lines it cannot write. Risk beyond the log: a write failure could someday pop an error box, which would make every later clean SKIP.
+- v1.2.0 (SHA256 501B9FF8...BE7815, Drive `AutoClean_v1.2.ps1`): no log reads during a clean (size/time stamp only), single read after it is quiet. Next: `MACHINE1_FOLLOWUP2_PROMPT.md` on the laptop, one supervised clean, expect 10/10 PASS.
+
+## Status 2026-10-08 night: READY (superseded)
 
 - v1.1 installed, machine-settings.json set, Discover OK (4 head-All > Normal = 21025, TopCount 9), Method Menu, DryRun OK.
 - Test clean 17:16:38: ran by Menu, confirmed by VID=57, 83 s (same as hand cleans at 12:40 and 14:44). Result ALERT: PrintExp logged 8 cap down / 5 up, last line down. Anthony at the printer: clean looked normal, heads capped. Hand cleans that day logged 10/10, so this printer's cap logging is not always complete.

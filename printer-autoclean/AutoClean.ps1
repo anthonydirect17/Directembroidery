@@ -32,6 +32,10 @@
       MenuGroup  Clean menu entry whose sub-menu holds "Clean normal" (default "2 head-All")
       CleanVid   code PrintExp writes to its log when a clean starts, "VID=<n>]" (default 31)
 
+    While a clean runs, PrintExp's log is not opened: the script watches only its size and time
+    stamp, and reads it once the clean is over. (Machine 1's 2022 PrintExp dropped log lines when
+    the log was read during a clean.)
+
     Windows PowerShell 5.1, built-in Windows features only. Must run elevated, because
     PrintExp runs elevated and Windows blocks messages from a normal program to it.
 #>
@@ -48,7 +52,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$ScriptVersion = '1.1.0'
+$ScriptVersion = '1.2.0'
 $TaskName = 'Direct Embroidery DTF AutoClean'
 $ScriptPath = $MyInvocation.MyCommand.Path
 $ScriptDir = Split-Path -Parent $ScriptPath
@@ -408,6 +412,21 @@ function Wait-CleanConfirmed([string]$ExePath, [int]$Baseline, [int]$Seconds) {
     return $null
 }
 
+function Wait-LogQuiet([string]$ExePath, [int]$MinSeconds, [int]$QuietSeconds, [int]$MaxSeconds) {
+    # Waits until PrintExp's log has not changed for QuietSeconds (and at least MinSeconds have passed).
+    # Looks only at the file's size and time stamp, never opens it, so PrintExp can always write to it.
+    $f = Join-Path (Split-Path $ExePath) ("Log\Log[{0}].txt" -f (Get-Date -Format 'yyyy_MM_dd'))
+    $sig = { $fi = New-Object IO.FileInfo -ArgumentList $f; if ($fi.Exists) { '{0}/{1}' -f $fi.Length, $fi.LastWriteTimeUtc.Ticks } else { '' } }
+    $start = Get-Date; $quietSince = $start; $last = & $sig
+    while (((Get-Date) - $start).TotalSeconds -lt $MaxSeconds) {
+        Start-Sleep -Seconds 2
+        $now = & $sig
+        if ($now -ne $last) { $last = $now; $quietSince = Get-Date }
+        if (((Get-Date) - $start).TotalSeconds -ge $MinSeconds -and ((Get-Date) - $quietSince).TotalSeconds -ge $QuietSeconds) { return }
+    }
+    Write-Log "PrintExp log still changing after $MaxSeconds s; reading it anyway." 'WARN'
+}
+
 function Open-CleanMenu($S) {
     # Same message the Clean button sends to its panel when clicked (BN_CLICKED). No mouse.
     $wParam = [IntPtr]($ID_CLEAN -band 0xFFFF)
@@ -581,8 +600,16 @@ function Invoke-Clean([switch]$Dry) {
             }
             if (-not $hl) { [void](Close-Menus ([uint32]$s2.Proc.Id) $s2.Toolbar); Write-Log 'Could not highlight Normal. Closed the menu; nothing chosen.' 'ERROR'; return 'FAIL could not highlight Normal' }
             Send-Key $subWnd[0] $VK_RETURN
-            $confirmed = Wait-CleanConfirmed $s2.Path $baseline 20
-            if ($confirmed) { $how = 'Menu' }
+            # Leave PrintExp's log alone while the clean runs (a normal clean takes 54 to 83 s), then read it once.
+            Write-Log 'Normal chosen. Waiting for the clean to finish before reading the PrintExp log.'
+            Wait-LogQuiet $s2.Path 90 30 300
+            $now = Get-PrintExpLogLines $s2.Path
+            if ($now.Count -gt $baseline) {
+                $newLines = @($now[$baseline..($now.Count - 1)])
+                $vidAt = -1
+                for ($k = 0; $k -lt $newLines.Count; $k++) { if ($newLines[$k] -match ('VID={0}\]' -f $CleanVid)) { $vidAt = $k; break } }
+                if ($vidAt -ge 0) { $confirmed = @($newLines[0..$vidAt]); $how = 'Menu' }
+            }
             if ((Get-MenuWindows ([uint32]$s2.Proc.Id)).Count -gt 0) { [void](Close-Menus ([uint32]$s2.Proc.Id) $s2.Toolbar) }
         }
     }
@@ -603,13 +630,7 @@ function Invoke-Clean([switch]$Dry) {
 
     # Wait for the capping station to settle and the printer to report ready again.
     # (A normal clean on 2026-10-07 took 54 s with pauses up to 13 s between cap moves.)
-    $deadline = (Get-Date).AddMinutes(4); $quietSince = Get-Date; $count = (Get-PrintExpLogLines $s.Path).Count
-    while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Seconds 2
-        $c = (Get-PrintExpLogLines $s.Path).Count
-        if ($c -ne $count) { $count = $c; $quietSince = Get-Date }
-        if (((Get-Date) - $quietSince).TotalSeconds -ge 30) { break }
-    }
+    Wait-LogQuiet $s.Path 0 30 240
     $after = Get-PrintExp
     $all = Get-PrintExpLogLines $s.Path
     $new = @($all[$baseline..($all.Count - 1)])

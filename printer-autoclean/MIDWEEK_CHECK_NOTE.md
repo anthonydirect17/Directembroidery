@@ -7,7 +7,7 @@ Do NOT click anything in the printer program, and do not turn anything off.
 For EACH printer (the laptop printer and the desktop printer):
 
 1. Wake the screen by moving the mouse a little. Don't press any keys.
-2. The printer program (PrintExp) should be open, and showing the words "Device Ready".
+2. The printer program (PrintExp) should be open and showing the words "Device Ready".
 3. There should be no error box or message on the screen.
 4. Look at the printer: the print head should be parked at the end where it always sits when not printing (sitting on its cap, not out in the middle).
 5. Glance at the waste ink bottle. It should not be close to full.

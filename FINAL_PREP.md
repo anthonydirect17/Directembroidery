@@ -17,7 +17,7 @@ When you're back: click **Turn OFF**.
 
 ## Machine 1 (laptop, offline): ready
 
-Set up 10/8. Test clean ran 10/8 5:16 PM; Anthony watched it: normal clean, heads capped. The script logged ALERT only because PrintExp skipped some cap lines in its log (same 83 second clean as the hand cleans). On this laptop an ALERT changes nothing: it only goes in the log, cleans keep running, and no email is sent (offline).
+Set up 10/8. Final test clean 10/8 5:38 PM: PASS, cap 10 down / 10 up, same 83 second clean as a hand clean. (Script v1.2. Earlier test cleans showed ALERT only because the script was reading PrintExp's log during the clean; fixed.) No email alerts from this laptop (offline).
 
 On the day you leave:
 

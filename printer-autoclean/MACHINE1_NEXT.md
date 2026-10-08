@@ -13,7 +13,12 @@ Saved 2026-10-07. Pick up here when Anthony says "work on Machine 1".
   - 11788, started 2026-10-07 10:24 AM, window "PrintExp", owns the printer connection (the real one)
   - The laptop has not restarted since at least 2026-08-31.
 
-## Status 2026-10-08 late: v1.2 test pending
+## Status 2026-10-08 17:40: READY (v1.2 confirmed)
+
+- v1.2.0 test clean 17:38:17 to 17:39:40 (83 s, same as hand cleans): RESULT PASS (Menu), cap 10 down / 10 up, ended capped, Device Ready, 0 error lines. Whole run 154 s. Log gaps gone, so the cause was the script reading the log during the clean.
+- Switch OFF until departure. Wi-Fi to be turned off. Leave-day checklist in FINAL_PREP.md.
+
+## Status 2026-10-08 late: v1.2 test pending (resolved)
 
 - Two more supervised cleans (17:22, 17:24) also ALERT with gaps in PrintExp's own log (2D/8U, 4D/7U); hand cleans are always 10/10. Anthony: caps seated every time, all normal.
 - Likely cause: v1.1 opened PrintExp's log every 1 to 2 s during the clean and the 2022 PrintExp drops lines it cannot write. Risk beyond the log: a write failure could someday pop an error box, which would make every later clean SKIP.

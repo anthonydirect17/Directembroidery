@@ -13,6 +13,12 @@ Saved 2026-10-07. Pick up here when Anthony says "work on Machine 1".
   - 11788, started 2026-10-07 10:24 AM, window "PrintExp", owns the printer connection (the real one)
   - The laptop has not restarted since at least 2026-08-31.
 
+## Status 2026-10-08 night: READY
+
+- v1.1 installed, machine-settings.json set, Discover OK (4 head-All > Normal = 21025, TopCount 9), Method Menu, DryRun OK.
+- Test clean 17:16:38: ran by Menu, confirmed by VID=57, 83 s (same as hand cleans at 12:40 and 14:44). Result ALERT: PrintExp logged 8 cap down / 5 up, last line down. Anthony at the printer: clean looked normal, heads capped. Hand cleans that day logged 10/10, so this printer's cap logging is not always complete.
+- Decision: no script change. On Machine 1 an ALERT is only a log label (no email, cleans continue), so the cap check has no effect here. Switch stays OFF until departure; leave-day checklist in FINAL_PREP.md.
+
 ## Status 2026-10-08 evening
 
 - Local session (laptop online, Wi-Fi not set metered) did steps 1 to 3, 7 and 8. Task installed (9:00 and 17:00), shortcut made, switch OFF, sleep/hibernate/lid off.

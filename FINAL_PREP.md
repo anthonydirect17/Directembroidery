@@ -15,9 +15,19 @@ On the day you leave:
 
 When you're back: click **Turn OFF**.
 
-## Machine 1 (laptop, offline): not set up yet
+## Machine 1 (laptop, offline): ready
 
-Checklist gets added here once setup is finished. Setup steps: `printer-autoclean/MACHINE1_NEXT.md`.
+Set up 10/8. Test clean ran 10/8 5:16 PM; Anthony watched it: normal clean, heads capped. The script logged ALERT only because PrintExp skipped some cap lines in its log (same 83 second clean as the hand cleans). On this laptop an ALERT changes nothing: it only goes in the log, cleans keep running, and no email is sent (offline).
+
+On the day you leave:
+
+- [ ] Empty the waste ink bottle
+- [ ] Restart the laptop, open PrintExp, wait for **Device Ready** (the restart makes sure only one PrintExp is running)
+- [ ] Laptop plugged in, Wi-Fi off
+- [ ] "DTF AutoClean On-Off" shortcut: click **Turn ON**
+- [ ] Left signed in and **unlocked** (do not press Win+L)
+
+When you're back: click **Turn OFF**. Nothing alerts you about Machine 1 while you're away; results are in `C:\DirectTools\printer-autoclean\logs\`.
 
 ## Already covered, nothing to do
 

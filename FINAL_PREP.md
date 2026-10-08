@@ -29,6 +29,10 @@ On the day you leave:
 
 When you're back: click **Turn OFF**. Nothing alerts you about Machine 1 while you're away; results are in `C:\DirectTools\printer-autoclean\logs\`.
 
+## Midweek check (someone at the shop)
+
+- [ ] Print the note "DTF printers - midweek check note (print this)" (Drive folder "Printer AutoClean (DTF)"), write your phone number on it, and hand it to whoever will stop by around 10/14 or 10/15.
+
 ## Already covered, nothing to do
 
 - Email cleanup runs on its own (next chunk around 10/16 to 10/17).

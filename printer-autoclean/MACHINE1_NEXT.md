@@ -13,6 +13,13 @@ Saved 2026-10-07. Pick up here when Anthony says "work on Machine 1".
   - 11788, started 2026-10-07 10:24 AM, window "PrintExp", owns the printer connection (the real one)
   - The laptop has not restarted since at least 2026-08-31.
 
+## Status 2026-10-08 evening
+
+- Local session (laptop online, Wi-Fi not set metered) did steps 1 to 3, 7 and 8. Task installed (9:00 and 17:00), shortcut made, switch OFF, sleep/hibernate/lid off.
+- Discover stopped: this PrintExp's Clean menu has 9 items ("4 head-All", "4 head-H1~H3", ... "4 head-H4"), not 3, and it logs a clean as VID=57 (Machine 2: VID=31). Machine has 3 heads; Anthony uses **4 head-All > Clean normal** by hand (screenshot confirmed).
+- Fix: `AutoClean.ps1` v1.1.0 (SHA256 2077F8AD...6AB7C, Drive `AutoClean_v1.1.ps1`) adds an optional `machine-settings.json`. Machine 1 uses `{ "MenuGroup": "4 head-All", "CleanVid": 57 }`. Without the file v1.1 behaves like v1.0, so Machine 2 keeps v1.0 (5999F335...F644) untouched.
+- Next: paste `MACHINE1_FOLLOWUP_PROMPT.md` into the laptop session: install v1.1, settings file, Discover, Discover:1, Method Menu, DryRun, supervised test clean.
+
 ## Plan (decided 2026-10-08): short internet session
 
 Anthony connects the laptop to the shop Wi-Fi for one session and a local Claude does steps 2 to 8 below. Prompt: `MACHINE1_LOCAL_PROMPT.md` (also in the Drive folder "Printer AutoClean (DTF)").

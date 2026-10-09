@@ -3,7 +3,8 @@ import sys, numpy as np, cv2, trimesh
 from PIL import Image
 REV = sys.argv[1] if len(sys.argv) > 1 else 'r1'
 RES = 8
-t = trimesh.load(f'out/event_sign_{REV}.stl')
+STL = sys.argv[2] if len(sys.argv) > 2 else f'out/event_sign_{REV}.stl'
+t = trimesh.load(STL)
 print('loaded', t.extents.round(2), 'watertight', t.is_watertight, 'bodies', len(t.split(only_watertight=False)))
 x0, y0 = t.bounds[0][:2]; Wd, Hd = (t.extents[:2] * RES).astype(int) + 4
 def section_mask(z):
@@ -16,8 +17,8 @@ def section_mask(z):
     return m
 base, white, red = section_mask(1.5), section_mask(3.3), section_mask(3.9)
 img = np.full((Hd, Wd, 3), 214, np.uint8)
-img[base > 0] = (22, 22, 22); img[white > 0] = (242, 242, 242); img[red > 0] = (196, 32, 44)
-Image.fromarray(img).save(f'out/preview_top_{REV}.png')
+img[base > 0] = (22, 22, 22); img[white > 0] = (242, 242, 242); img[red > 0] = (212, 170, 40) if 'review' in STL else (196, 32, 44)
+Image.fromarray(img).save(STL.replace('.stl', '_top.png'))
 det = cv2.QRCodeDetector()
 bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 print('QR decode full view:', repr(det.detectAndDecode(bgr)[0]))

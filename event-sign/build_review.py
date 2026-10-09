@@ -9,7 +9,7 @@ import numpy as np, cv2, segno
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(HERE, 'out'); os.makedirs(OUT, exist_ok=True)
-REV = 'r1'
+REV = 'r2'
 URL = sys.argv[1] if len(sys.argv) > 1 else None
 RES = 20 if URL else 10
 SW, SH = 242.0, 240.0
@@ -51,23 +51,24 @@ def star(cx, cy, r):
 # ---------------- shirt silhouette ----------------
 def bez(p0, p1, p2, n=24):
     return [((1-t)**2*p0[0] + 2*(1-t)*t*p1[0] + t*t*p2[0], (1-t)**2*p0[1] + 2*(1-t)*t*p1[1] + t*t*p2[1]) for t in [i/n for i in range(n+1)]]
-right = (bez((C+27, 234), (C+52, 233), (C+80, 223))          # shoulder, gently curved
-         + bez((C+80, 223), (C+90, 220), (C+98, 212))[1:]     # round into the sleeve
-         + [(C+121, 186), (C+104, 165)]                       # sleeve top edge, cuff
-         + bez((C+104, 165), (C+86, 174), (C+77, 178))[1:]    # sleeve underside to armpit
-         + bez((C+77, 178), (C+73, 120), (C+77, 0))[1:])       # body side, slight waist
+right = (bez((C+27, 234), (C+56, 233), (C+84, 225))          # broad, gently curved shoulder
+         + bez((C+84, 225), (C+95, 221), (C+102, 214))[1:]    # round into the sleeve
+         + bez((C+102, 214), (C+112, 205), (C+121, 195))[1:]  # sleeve top edge
+         + [(C+113, 155)]                                     # cuff, about 40 mm deep
+         + bez((C+113, 155), (C+92, 159), (C+81, 163))[1:]    # sleeve underside to the armpit
+         + bez((C+81, 163), (C+76, 110), (C+79, 0))[1:])       # body side, slight waist
 left = [(2*C - x, y) for x, y in reversed(right)]
 neck = [(C + 27 * math.cos(a), 234 - 15 * math.sin(a)) for a in np.linspace(math.pi, 0, 40)]   # scoop, left to right
 outline = right + left + neck[1:-1]
 shirt = fill(outline)
-shirt = cv2.morphologyEx(cv2.morphologyEx(shirt, cv2.MORPH_CLOSE, disk(2.5)), cv2.MORPH_OPEN, disk(2.5))
+shirt = cv2.morphologyEx(cv2.morphologyEx(shirt, cv2.MORPH_CLOSE, disk(3.0)), cv2.MORPH_OPEN, disk(3.0))
 # collar rib (accent) following the neck
 collar_out = [(C + 27 * math.cos(a), 234 - 15 * math.sin(a)) for a in np.linspace(math.pi, 0, 60)]
 collar = polyline([(C + 30.5 * math.cos(a), 234 - 18.5 * math.sin(a)) for a in np.linspace(math.pi * 0.98, math.pi * 0.02, 60)], 4.2) & shirt
 collar_stitch = dashed([(C + 36 * math.cos(a), 234 - 24 * math.sin(a)) for a in np.linspace(math.pi * 0.93, math.pi * 0.07, 80)], 0.9, 2.6, 1.8)
 # sleeve hem stitching (parallel to the cuff, 5 mm in)
 def cuff_stitch(s):
-    a, b = (C + s * 121, 186), (C + s * 104, 165)
+    a, b = (C + s * 121, 195), (C + s * 113, 155)
     dx, dy = b[0] - a[0], b[1] - a[1]; L = math.hypot(dx, dy); nx, ny = -dy / L, dx / L
     if s > 0: nx, ny = -nx, -ny
     off = 5.0; pa = (a[0] + nx * off + dx / L * 2.5, a[1] + ny * off + dy / L * 2.5); pb = (b[0] + nx * off - dx / L * 3.5, b[1] + ny * off - dy / L * 3.5)

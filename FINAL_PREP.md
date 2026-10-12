@@ -1,5 +1,7 @@
 # Final prep before the trip (leave 10/11, back 10/18)
 
+> **Plan change (10/12):** Anthony did a thorough manual clean Sat 10/10 and left the machines OFF. Someone turns the machines and the auto-clean back on Wed 10/14 in the afternoon. Watchdog now checks from the Wed 10/14 5:00 PM clean to Sun 10/18 9:30 AM. (It sent two NO CLEAN alerts on 10/11 5 PM and 10/12 9 AM before the change: expected, machines were off.)
+
 Go through this the day before leaving (10/10).
 
 ## Machine 2 (desktop, online): ready
